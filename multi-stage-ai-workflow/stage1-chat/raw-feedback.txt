@@ -1,0 +1,5 @@
+Hey, it would be so helpful if TaskFlow just told me every time I open the app how many of my
+tasks are already overdue. Right now the only way I notice is if I scroll through the whole
+list and check due dates myself, which means I usually find out way too late. Maybe just a
+small badge or number near the task list so I can't miss it? Doesn't need to be fancy, I just
+don't want to keep blowing past deadlines without knowing.
