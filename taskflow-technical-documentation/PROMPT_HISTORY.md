@@ -323,26 +323,29 @@ the chaining/tone-standardization pass (Stage 4).
 
 Assumptions identified:
 
-- The email-format rule (`must contain @`, Section 7) is documented as
-  enforced at **registration**, but the draft's "Log in" endpoint only
-  lists `400` for missing `email`/`password`, not for a malformed email.
-  Section 7's wording ("Required for register/login; must contain `@`;
-  must be unique at registration") is ambiguous about whether the format
-  check also applies at login. This is an assumption, not a confirmed
-  fact, and needs a decision before this can be called fact-checked.
-- The draft assumes `GET`/`DELETE` requests simply have no body, since the
-  specification only states that requests *including* a body must send
-  `Content-Type: application/json` — it doesn't explicitly say `GET`/
-  `DELETE` can't have one. Documenting these as "Request body: none" is a
-  reasonable reading, not a directly stated rule.
-- Endpoint headings use conventional REST verbs ("List tasks," "Retrieve a
-  task") rather than the specification's own section titles ("View all
-  tasks," "View a single task," Section 6.4–6.5). This is assumed to be
-  acceptable for a developer audience but is a wording choice, not
-  something the specification dictates.
+- The email-format rule (`must contain @`, Section 7) was documented as
+  enforced at **registration** only, but the draft's "Log in" endpoint
+  only listed `400` for missing `email`/`password`, not for a malformed
+  email. Section 7's wording ("Required for register/login; must contain
+  `@`; must be unique at registration") is ambiguous about whether the
+  format check also applies at login. **Resolution:** resolved in the
+  refinement pass — see the refinement entry below for the decision and
+  reasoning.
+- The draft assumed `GET`/`DELETE` requests simply have no body, and
+  stated this explicitly ("Request body: none"), even though the
+  specification never makes that statement — it only requires
+  `Content-Type: application/json` for requests that *do* include a body.
+  **Resolution:** resolved in the refinement pass — the unsupported
+  "Request body: none" lines were removed rather than left as an assumed
+  claim (see refinement entry).
+- Endpoint headings used conventional REST verbs ("List tasks," "Retrieve
+  a task") rather than the specification's own section titles ("View all
+  tasks," "View a single task," Section 6.4–6.5). **Resolution:** resolved
+  — headings now match the specification's own titles exactly (see
+  refinement entry).
 
-Possible inaccuracies: none identified. Every method, path, status code,
-field name, and JSON example was drawn directly from
+Possible inaccuracies: none identified in the first pass. Every method,
+path, status code, field name, and JSON example was drawn directly from
 `PROJECT_SPECIFICATION.md` Section 6 with no alterations.
 
 Missing information:
@@ -350,30 +353,136 @@ Missing information:
 - The specification defines error **status codes and causes** (Section 9)
   but never defines a JSON error response **body shape**. The draft
   intentionally does not invent one (e.g., no fabricated
-  `{"error": "..."}` schema) — this is deliberate, not an oversight, but is
-  worth calling out since developers reading a real API reference would
-  normally expect one.
+  `{"error": "..."}` schema). **Resolution:** left as-is — confirmed
+  correct on the refinement pass; inventing an error body shape would be
+  presenting an assumption as a specification fact, which the
+  specification does not support.
 - No mention of API versioning behaviour beyond the `/v1` path segment, or
   rate limiting — both are explicitly out of scope per Section 10, so
-  their absence is intentional.
+  their absence is intentional and unchanged.
 
 Examples requiring fact-checking:
 
 - All JSON request/response examples were copied field-for-field from
-  Section 6 of the specification. A formal side-by-side diff against the
-  specification is still pending as part of the pre-commit verification
-  step, per the process in `DOCUMENTATION_PLAN.md`.
+  Section 6 of the specification. A formal side-by-side diff was performed
+  as part of the refinement pass and again immediately before commit — no
+  discrepancies found.
 
-Areas requiring refinement:
+Areas requiring refinement — all addressed in the Stage 2 — API Reference
+Refinement entry below:
 
-- Resolve the login email-format assumption above.
-- Decide whether to align endpoint headings with the specification's exact
-  section titles or keep the current REST-verb phrasing.
-- Tighten a redundant phrase in the Authentication section ("no token
-  refresh endpoint and no logout/token-revocation endpoint — none is
-  defined").
+- Login email-format handling — resolved.
+- `GET`/`DELETE` request-body wording — resolved.
+- Endpoint heading terminology — resolved.
+- Redundant phrase in the Authentication section — resolved.
 - Tone/heading-level consistency with the other two documents remains
-  deferred to the Stage 4 chaining pass.
+  deferred to the Stage 4 chaining pass, per `DOCUMENTATION_PLAN.md` — not
+  addressed here, by design.
+
+### Stage 2 — API Reference Refinement
+
+**Purpose:** Fact-check the Stage 2 first-pass draft line-by-line against
+`PROJECT_SPECIFICATION.md`, resolve every open item in the Stage 2 Review
+Notes above (in particular the login email-format ambiguity), remove any
+statement not directly supported by the specification, and improve
+readability and cross-document terminology consistency without changing
+what the API is documented to do.
+
+**Prompt used:**
+
+> We are now completing Stage 2 by fact-checking and refining the API
+> Reference. Read PROJECT_SPECIFICATION.md, DOCUMENTATION_PLAN.md,
+> docs/api-reference.md, docs/getting-started.md, and PROMPT_HISTORY.md.
+> Do not modify PROJECT_SPECIFICATION.md. Perform a strict, line-by-line
+> comparison of docs/api-reference.md against PROJECT_SPECIFICATION.md and
+> verify every endpoint for technical accuracy: HTTP methods, paths, auth
+> requirements, request-body fields (only supported ones), required vs.
+> optional fields, response-body fields (only defined ones), success status
+> codes, documented error statuses, validation rules, internal consistency
+> of JSON examples, no unsupported endpoints or fields introduced, the
+> update-vs-status relationship (status is updated through the Update Task
+> endpoint; no separate mark-complete endpoint), authentication accuracy
+> (bearer token format, no refresh, no logout, no expiration beyond what's
+> stated), and that no assumptions are presented as specification facts.
+> Resolve every issue in the Stage 2 Review Notes — in particular, decide
+> whether email-format validation applies only to registration or also to
+> login, based strictly on PROJECT_SPECIFICATION.md; replace REST
+> terminology that differs unnecessarily from the specification's own
+> endpoint titles; remove or reword statements implying behaviour not
+> explicitly defined (such as request bodies for GET/DELETE); tighten
+> repetitive wording without changing meaning; preserve all supported
+> examples while keeping them technically accurate. Then improve
+> readability: consistent heading hierarchy, identical endpoint-section
+> structure, consistently formatted tables, consistent JSON indentation,
+> and terminology consistent with docs/getting-started.md where
+> appropriate.
+
+**Fact-checking checks performed:** all 15 checks listed in the prompt
+above, each verified directly against the specification section that
+governs it (Sections 3, 4, 5, 6.1–6.7, 7, 8, and 9). Every HTTP method,
+path, auth requirement, request/response field, status code, and JSON
+example in the draft was re-compared line-by-line against
+`PROJECT_SPECIFICATION.md` Section 6 a second time during this pass.
+
+**Issues identified in the first pass:** the three assumptions and the one
+wording issue already recorded in the Stage 2 Review Notes above (login
+email-format ambiguity; unsupported "Request body: none" claims on
+`GET`/`DELETE` endpoints; endpoint heading terminology diverging from the
+specification's own section titles; a redundant phrase in the
+Authentication section). No factual errors (wrong methods, paths, status
+codes, or fields) were found — the issues were all about unstated
+assumptions or wording, not incorrect technical claims.
+
+**Issues resolved:**
+
+1. **Login email-format validation.** Decision: the format rule (`must
+   contain @`) **applies to both registration and login**. Reasoning,
+   based strictly on Section 7's text: the `email` row states "Required
+   for register/login" up front, covering both operations, and then lists
+   "must contain `@`" as an unqualified rule for the field itself.
+   Immediately after, "must be unique at registration" *is* explicitly
+   scoped to one operation — showing that when the specification means to
+   restrict a rule to a single operation, it says so. Since the `@` format
+   rule carries no such qualifier, the more defensible reading is that it
+   applies wherever `email` is required, i.e., both endpoints. The "Log
+   in" section's request-field table and error table were updated to
+   state this plainly, as a documented validation rule — not hedged or
+   flagged as uncertain in the reference itself, since the API reference
+   is meant to be authoritative. The reasoning behind the decision is
+   recorded here, not silently presented as if Section 7 stated it
+   verbatim for login.
+2. **Unsupported `GET`/`DELETE` request-body claims.** The "Request body:
+   none" lines on View all tasks, View a single task, and Delete a task
+   were removed rather than reworded, matching the specification's own
+   presentation (Sections 6.4, 6.5, and 6.7 never mention a request body
+   for these endpoints at all — they simply omit the section).
+3. **Endpoint heading terminology.** "List tasks" → "View all tasks" and
+   "Retrieve a task" → "View a single task," matching
+   `PROJECT_SPECIFICATION.md` Section 6.4/6.5 titles exactly. The Overview
+   table's purpose column was updated to match. This also brings the API
+   reference into closer terminology alignment with
+   `docs/getting-started.md`'s "Viewing Your Tasks" / "Viewing a Single
+   Task" sections.
+4. **Redundant phrasing.** "There is no token refresh endpoint and no
+   logout/token-revocation endpoint — none is defined" tightened to
+   "There is no token refresh endpoint and no logout/token-revocation
+   endpoint." "Tokens do not expire within this API" tightened to "Tokens
+   do not expire," without dropping any meaning.
+
+**Improvements made:**
+
+- Heading hierarchy, per-endpoint section structure (name → method/path →
+  description → auth → request → response → errors), and table formatting
+  are now identical across all 7 endpoints.
+- JSON examples retain consistent 2-space indentation throughout, unchanged
+  from the first pass (already consistent).
+- Status banner at the top of the document updated from "First-pass draft"
+  to "Fact-checked and refined (Stage 2 complete)."
+
+**Verification:** The refined `docs/api-reference.md` was compared against
+`PROJECT_SPECIFICATION.md` a final time, endpoint by endpoint, method by
+method, field by field. No discrepancies were found.
+`PROJECT_SPECIFICATION.md` was not modified at any point in this stage.
 
 ---
 

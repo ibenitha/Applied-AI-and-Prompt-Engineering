@@ -1,8 +1,8 @@
 # TaskFlow API Reference
 
-> **Status:** First-pass draft (Stage 2). Not yet fact-checked or refined.
-> See [../PROMPT_HISTORY.md](../PROMPT_HISTORY.md) for the prompt that
-> produced this draft and the review notes for what still needs work.
+> **Status:** Fact-checked and refined (Stage 2 complete). See
+> [../PROMPT_HISTORY.md](../PROMPT_HISTORY.md) for the prompts used to
+> produce and refine this reference.
 
 This reference documents every endpoint exposed by the TaskFlow API, for
 developers integrating with it or building clients against it.
@@ -19,8 +19,8 @@ must send `Content-Type: application/json`.
 | `POST` | `/auth/register` | No | Register a new user |
 | `POST` | `/auth/login` | No | Log in and obtain a bearer token |
 | `POST` | `/tasks` | Yes | Create a task |
-| `GET` | `/tasks` | Yes | List the authenticated user's tasks |
-| `GET` | `/tasks/{id}` | Yes | Retrieve a single task |
+| `GET` | `/tasks` | Yes | View all of the authenticated user's tasks |
+| `GET` | `/tasks/{id}` | Yes | View a single task |
 | `PATCH` | `/tasks/{id}` | Yes | Update a task (title, description, and/or status) |
 | `DELETE` | `/tasks/{id}` | Yes | Delete a task |
 
@@ -41,8 +41,8 @@ bearer-token authentication for every subsequent request.
 
 - A request to any task endpoint with a missing or invalid token receives
   `401 Unauthorized`.
-- Tokens do not expire within this API. There is no token refresh endpoint
-  and no logout/token-revocation endpoint — none is defined.
+- Tokens do not expire. There is no token refresh endpoint and no
+  logout/token-revocation endpoint.
 - Every task endpoint is scoped to the authenticated user. A user can only
   see, update, or delete their own tasks. Requesting another user's task by
   `id` returns `404 Not Found` rather than any indication that the task
@@ -105,7 +105,7 @@ subsequent requests.
 
 | Field | Type | Required | Notes |
 | --- | --- | --- | --- |
-| `email` | string | Yes | Must match a registered account |
+| `email` | string | Yes | Must contain `@`; must match a registered account |
 | `password` | string | Yes | Must match the account's password |
 
 ```json
@@ -127,7 +127,7 @@ subsequent requests.
 
 | Status | Condition |
 | --- | --- |
-| `400 Bad Request` | `email` or `password` missing |
+| `400 Bad Request` | `email` or `password` missing, or `email` does not contain `@` |
 | `401 Unauthorized` | No account matches the email, or the password is incorrect |
 
 ---
@@ -178,15 +178,13 @@ Creates a new task belonging to the authenticated user.
 
 ---
 
-### List tasks
+### View all tasks
 
 `GET /tasks`
 
 Returns every task belonging to the authenticated user.
 
 **Authentication required:** Yes
-
-**Request body:** none
 
 **Success response — `200 OK`**
 
@@ -215,15 +213,13 @@ If the user has no tasks, `tasks` is an empty array — this is not an error.
 
 ---
 
-### Retrieve a task
+### View a single task
 
 `GET /tasks/{id}`
 
 Returns a single task belonging to the authenticated user.
 
 **Authentication required:** Yes
-
-**Request body:** none
 
 **Success response — `200 OK`**
 
@@ -306,8 +302,6 @@ mark-complete endpoint.
 Deletes a task belonging to the authenticated user.
 
 **Authentication required:** Yes
-
-**Request body:** none
 
 **Success response — `204 No Content`**
 
