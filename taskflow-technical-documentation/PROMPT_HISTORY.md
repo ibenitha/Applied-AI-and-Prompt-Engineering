@@ -801,4 +801,64 @@ was not modified.
 
 ## Stage 5 — Final assembly
 
-*Not yet started.*
+### Stage 5 — AI Documentation Reflection
+
+**Purpose:** Produce `docs/AI_DOCUMENTATION_REFLECTION.md`, a professional
+reflection documenting the complete AI-assisted documentation workflow used
+throughout this project — how the documentation was produced, reviewed,
+refined, and validated — based strictly on the work actually recorded in
+this file, not an idealized or invented account.
+
+**Prompt used:**
+
+> We are now beginning the final stage of the documentation workflow. Read
+> PROJECT_SPECIFICATION.md, DOCUMENTATION_PLAN.md, PROMPT_HISTORY.md,
+> docs/getting-started.md, docs/api-reference.md, and
+> docs/troubleshooting.md. PROJECT_SPECIFICATION.md remains the frozen
+> source of truth — do not modify it. Create
+> docs/AI_DOCUMENTATION_REFLECTION.md: a reflective document explaining how
+> the documentation was produced, reviewed, refined, and validated, written
+> as a professional software engineering reflection rather than a diary or
+> narrative, covering: an overview (objective, why the specification was
+> frozen first, why a structured workflow was adopted); the documentation
+> workflow (specification → Getting Started → API Reference →
+> Troubleshooting → cross-document consistency review → final set, and why
+> each stage existed); the role of AI (generating drafts, improving
+> readability, maintaining consistency, identifying ambiguities, assisting
+> review — making clear AI output was never accepted without verification);
+> human review and verification (specification as authoritative source,
+> line-by-line fact-checking, intentional exclusion of unsupported
+> features, documenting rather than hiding assumptions and ambiguities);
+> prompt engineering strategy (separating generation from refinement,
+> requiring review notes, requiring PROMPT_HISTORY updates, requiring Git
+> verification before commits, committing meaningful milestones — without
+> reproducing every prompt); benefits of the workflow (traceability, Git
+> history clarity, reduced hallucination, specification compliance, ease of
+> review, incremental quality improvement); challenges encountered
+> (ambiguous specification wording, unspecified behaviour, avoiding
+> invented UI details, cross-document consistency, and the token-expiry
+> inconsistency as an example of documenting rather than hiding ambiguity);
+> lessons learned (iterative prompting, human verification, the frozen
+> specification, documenting assumptions); and a conclusion stating the
+> documentation was AI-generated but verified through structured human
+> review against the frozen specification. Do not invent project history —
+> base the reflection only on the work actually performed. Then update
+> PROMPT_HISTORY.md with a Stage 5 — AI Documentation Reflection entry.
+
+**Summary of the reflection created:** A ten-section document (Overview,
+Documentation Workflow, Role of AI, Human Review and Verification, Prompt
+Engineering Strategy, Benefits of the Workflow, Challenges Encountered,
+Lessons Learned, Conclusion) following the suggested structure. It
+describes the actual five-stage sequence used in this project (Stage 0
+specification through Stage 4 consistency pass), references the real
+examples recorded earlier in this file — the update-vs-status-change
+ambiguity, the login email-format scope decision, and the Section 9 vs.
+Sections 3.2/8 token-expiry inconsistency — as concrete illustrations
+rather than generic claims, and states plainly in its conclusion that the
+documentation was AI-generated but verified through structured human
+review against the frozen specification.
+
+**Confirmation:** This completes the documentation workflow described in
+`DOCUMENTATION_PLAN.md` — specification, three fact-checked and refined
+documents, a cross-document consistency pass, and this closing reflection —
+with a complete, chronological record of every stage in this file.
