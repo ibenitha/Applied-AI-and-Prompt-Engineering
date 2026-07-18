@@ -548,20 +548,14 @@ been performed yet, per instruction.
 
 Assumptions identified:
 
-- **Title/description length violations are not stated as explicit error
+- **Title/description length violations were not stated as explicit error
   causes for `POST /tasks` or `PATCH /tasks/{id}`.** Section 6.3's and
   6.6's error tables only say "missing or empty title" / "empty title" as
   the `400` condition — they don't literally say "title over 200
   characters" or "description over 2,000 characters" triggers `400`, even
   though Section 7's validation table states those exact length limits.
-  The draft's "Likely cause" bullets for Can't Create/Update a Task only
-  list missing/blank title and invalid status, and only mention the
-  length limits in the "Resolution" text — it does not assert length
-  violations as a confirmed error *cause* in the same direct way. This
-  gap between the endpoint-specific error tables (Section 6) and the
-  general validation table (Section 7) should be resolved deliberately in
-  refinement, not left as an inconsistency between what's listed as a
-  cause versus what's implied by the resolution advice.
+  **Resolution:** resolved in the refinement pass — see the refinement
+  entry below for the decision and reasoning.
 
 Possible inaccuracies: none identified against Sections 3, 6, 7, and 9 —
 every status code and cause used was drawn directly from those sections.
@@ -569,35 +563,130 @@ every status code and cause used was drawn directly from those sections.
 Missing troubleshooting topics: none of the requested topics were omitted;
 all 13 items from the prompt are covered across the two H2 groups.
 
-Wording that requires refinement:
+Wording that requires refinement — both resolved in the refinement pass:
 
-- The "Can't Create a Task" and "Can't Update a Task" sections should
-  decide, explicitly, whether to list length violations (title >200 chars,
-  description >2,000 chars) as a stated "likely cause," to resolve the
-  Section 6 vs. Section 7 gap noted above.
-- "Incorrect Email or Password" states "TaskFlow returns the same error
-  either way" — this is a fair reading of Section 6.2's error table (both
-  causes map to one `401` row), but it's phrased less explicitly than
-  Section 3.3's stated policy for tasks ("TaskFlow does not reveal whether
-  a task ID belongs to someone else"). Worth confirming this inference is
-  acceptable to state as plainly as it currently is.
+- The "Can't Create a Task" and "Can't Update a Task" sections needed a
+  decision on whether to list length violations as a stated "likely
+  cause" — resolved, see refinement entry.
+- "Incorrect Email or Password" stated "TaskFlow returns the same error
+  either way," phrased more like an intentional privacy policy than
+  Section 6.2's error table actually supports — resolved, reworded to
+  describe only the observable fact (same status for both causes).
 
 Places where the specification leaves behaviour unspecified (or is
-internally inconsistent):
+internally inconsistent) — resolved conservatively, not by editing the
+specification:
 
-- **Section 9 vs. Sections 3.2/8 on token expiry.** Section 9's `401`
-  row lists "expired/invalid token" as a typical cause, but Section 3.2
-  states tokens "do not expire within the scope of this specification,"
-  and Section 8 explicitly lists "token expiry" as unsupported. This is a
-  minor internal tension in the specification itself: Section 9 appears to
-  carry over generic error-reference language that doesn't quite match
-  the specification's own stated behaviour elsewhere. The first-pass draft
-  deliberately did **not** mention "expired" tokens as a cause in the
-  "Missing or Invalid Token" topic, to stay consistent with Sections 3.2
-  and 8 rather than Section 9's wording. This choice, and the underlying
-  tension in the specification, should be confirmed as the right call
-  before treating this topic as fact-checked, since `PROJECT_SPECIFICATION.md`
-  itself cannot be modified to resolve the inconsistency.
+- **Section 9 vs. Sections 3.2/8 on token expiry.** Section 9's `401` row
+  lists "expired/invalid token" as a typical cause, but Section 3.2 states
+  tokens "do not expire within the scope of this specification," and
+  Section 8 explicitly lists "token expiry" as unsupported. This remains a
+  minor internal tension in `PROJECT_SPECIFICATION.md` itself, which
+  cannot be edited to resolve it. **Resolution:** the guide continues to
+  omit "expired" as a cause (the two affirmative, explicit statements in
+  Sections 3.2 and 8 outweigh Section 9's passing generic phrasing), and
+  now proactively tells the reader tokens don't expire, so an unauthorized
+  response is never a matter of an out-of-date token. See the refinement
+  entry below for the full reasoning.
+
+### Stage 3 — Troubleshooting Guide Refinement
+
+**Purpose:** Fact-check the Stage 3 first-pass draft line-by-line against
+`PROJECT_SPECIFICATION.md`, resolve every open item in the Stage 3 Review
+Notes above — in particular the title/description length-limit question,
+the incorrect-email/password wording, and the token-expiry inconsistency —
+and improve readability and terminology consistency without changing what
+the guide claims TaskFlow does.
+
+**Prompt used:**
+
+> We are now completing Stage 3 by fact-checking and refining the
+> Troubleshooting Guide. Read PROJECT_SPECIFICATION.md,
+> DOCUMENTATION_PLAN.md, docs/troubleshooting.md, docs/getting-started.md,
+> docs/api-reference.md, and PROMPT_HISTORY.md. Do not modify
+> PROJECT_SPECIFICATION.md. Perform a strict line-by-line comparison of
+> docs/troubleshooting.md against PROJECT_SPECIFICATION.md and verify that
+> every troubleshooting topic is fully supported: every problem can
+> actually occur; every likely cause is supported; every resolution is
+> supported; every status code is correct; validation rules match Section
+> 7 exactly; authentication behaviour matches Sections 3, 6, and 8 exactly;
+> no unsupported features or behaviours were introduced; cross-references
+> remain accurate; no API behaviour contradicts the specification; the
+> guide remains concise and scannable. Resolve every issue in the Stage 3
+> Review Notes: decide whether title/description length limits should be
+> explicit likely causes or stay only in resolution guidance, based
+> strictly on PROJECT_SPECIFICATION.md; review the incorrect email/password
+> wording so it reflects only what the specification states; resolve the
+> expired-token inconsistency (Sections 3.2/8 say tokens don't expire,
+> Section 9 lists "expired/invalid token" as a 401 cause) by documenting
+> the behaviour conservatively and recording the reasoning in
+> PROMPT_HISTORY.md rather than inventing behaviour, without altering
+> PROJECT_SPECIFICATION.md. Improve readability: consistent H2/H3
+> structure, concise bullet lists, no repetitive wording, terminology
+> matching docs/getting-started.md and docs/api-reference.md, and identical
+> structure across every troubleshooting topic.
+
+**Fact-checking checks performed:** all 10 checks listed in the prompt
+above, verified directly against Sections 3, 6, 7, 8, and 9 of the
+specification. Every problem, cause, resolution, and status code in the
+draft was re-compared line-by-line a second time during this pass.
+
+**Issues identified in the first pass:** the three items already recorded
+in the Stage 3 Review Notes above (title/description length limits not
+listed as explicit causes; "same error either way" phrasing on incorrect
+email/password; the expired-token tension between Section 9 and Sections
+3.2/8). No incorrect status codes, causes, or cross-references were found.
+
+**Issues resolved:**
+
+1. **Title/description length limits — decision: list them as explicit
+   likely causes.** Reasoning, based strictly on the specification: Section
+   9's table header describes its "Typical cause" column as illustrative
+   ("Typical" implies representative, not exhaustive), and its "Meaning"
+   column defines `400 Bad Request` generically as "The request body
+   failed validation" — not limited to the specific examples listed.
+   Section 7 is the specification's dedicated, authoritative validation
+   rules table, and it states the 1–200 character title limit and
+   2,000-character description limit as validation rules on those fields.
+   A title or description that violates a Section 7 rule fails validation,
+   which Section 9 defines as the general meaning of `400`. On this
+   reasoning, "Can't Create a Task" and "Can't Update a Task" now list
+   title length (and, for update, description length) as explicit likely
+   causes, not just resolution advice — closing the gap between Section 6's
+   narrower example wording and Section 7's actual rules.
+2. **Incorrect email/password wording.** "TaskFlow returns the same error
+   either way" was reworded to "Both cases return the same status and
+   error" — a purely descriptive statement about Section 6.2's error table
+   (both causes map to one `401` row), with no implication of an
+   intentional non-disclosure policy, since the specification states that
+   explicitly for tasks (Section 3.3) but never says so for login.
+3. **Expired-token inconsistency.** Resolved conservatively, without
+   touching `PROJECT_SPECIFICATION.md`: Sections 3.2 and 8 each explicitly
+   and affirmatively state tokens do not expire; Section 9 only uses
+   "expired/invalid token" as passing shorthand in a generic error-cause
+   list. Two explicit, on-topic statements outweigh one incidental mention
+   elsewhere, so the guide's "Missing or Invalid Token" topic continues to
+   omit "expired" as a cause. Beyond just omitting it, the topic now
+   states directly: "TaskFlow tokens do not expire, so if a request is
+   rejected, the token is missing, malformed, or simply wrong — not out of
+   date." This turns a potential point of reader confusion into a useful,
+   spec-grounded clarification, without inventing any new behaviour.
+
+**Improvements made:**
+
+- Every troubleshooting topic follows the identical structure: Problem →
+  Likely cause → Resolution → Status code → See also.
+- Terminology aligned with the other two documents (e.g., "View a single
+  task," "Update a task" section names match `docs/api-reference.md`
+  exactly; task-operation names match `docs/getting-started.md`).
+- Status banner updated from "First-pass draft" to "Fact-checked and
+  refined (Stage 3 complete)."
+
+**Remaining specification ambiguities:** one remains, by nature
+unresolvable without editing the frozen specification — the Section 9 vs.
+Sections 3.2/8 token-expiry tension described above. It has been handled
+conservatively (documented as "tokens do not expire," matching the two
+explicit statements) rather than papered over or silently guessed at.
 
 ---
 

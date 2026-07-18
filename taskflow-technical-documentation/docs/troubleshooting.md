@@ -1,8 +1,8 @@
 # TaskFlow Troubleshooting Guide
 
-> **Status:** First-pass draft (Stage 3). Not yet fact-checked or refined.
-> See [../PROMPT_HISTORY.md](../PROMPT_HISTORY.md) for the prompt that
-> produced this draft and the review notes for what still needs work.
+> **Status:** Fact-checked and refined (Stage 3 complete). See
+> [../PROMPT_HISTORY.md](../PROMPT_HISTORY.md) for the prompts used to
+> produce and refine this guide.
 
 This guide covers problems that end users and developers may actually run
 into while using TaskFlow — registering, logging in, and managing tasks.
@@ -86,7 +86,7 @@ itself, not because it's missing.
 **Problem:** Login fails even though you filled in both fields.
 
 **Likely cause:** Either no account matches that email, or the password is
-wrong. TaskFlow returns the same error either way.
+wrong. Both cases return the same status and error.
 
 **Resolution:** Double-check both fields for typos. If you don't have an
 account yet, register first.
@@ -104,7 +104,9 @@ account yet, register first.
 rejected before it does anything.
 
 **Likely cause:** The `Authorization` header is missing, malformed, or
-doesn't contain a valid token.
+doesn't contain a valid token. TaskFlow tokens do not expire, so if a
+request is rejected, the token is missing, malformed, or simply wrong —
+not out of date.
 
 **Resolution:** Include the header in the exact form
 `Authorization: Bearer <token>`. If you're not sure your token is valid,
@@ -141,11 +143,14 @@ task from your own account's task list.
 
 **Problem:** Creating a task fails.
 
-**Likely cause:** The `title` field is missing, empty, or made up of only
-spaces.
+**Likely cause:** One of the following:
+
+- `title` is missing, empty, or made up of only spaces
+- `title` is longer than 200 characters
+- `description` is longer than 2,000 characters
 
 **Resolution:** Provide a title between 1 and 200 characters that isn't
-blank. `description` is optional, but if included, must be 2,000
+blank. `description` is optional, but if included, keep it to 2,000
 characters or fewer.
 
 **Status code:** `400 Bad Request`
@@ -161,13 +166,15 @@ fails.
 **Likely cause:** One of the following:
 
 - The request doesn't include any fields to update
-- `title` is included but is empty or blank
+- `title` is included but is empty, blank, or longer than 200 characters
+- `description` is included and longer than 2,000 characters
 - `status` is set to something other than exactly `"pending"` or
   `"completed"`
 
 **Resolution:** Include at least one field to update. If updating the
 title, keep it within 1–200 characters and non-blank. If updating the
-status, use exactly `"pending"` or `"completed"` (lowercase).
+description, keep it to 2,000 characters or fewer. If updating the status,
+use exactly `"pending"` or `"completed"` (lowercase).
 
 **Status code:** `400 Bad Request`
 
