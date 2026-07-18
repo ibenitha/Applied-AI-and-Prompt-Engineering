@@ -1,6 +1,7 @@
 # TaskFlow API Reference
 
-> **Status:** Fact-checked and refined (Stage 2 complete). See
+> **Status:** Fact-checked and refined (Stage 2 complete), and reviewed for
+> cross-document consistency (Stage 4). See
 > [../PROMPT_HISTORY.md](../PROMPT_HISTORY.md) for the prompts used to
 > produce and refine this reference.
 

@@ -692,10 +692,110 @@ explicit statements) rather than papered over or silently guessed at.
 
 ## Stage 4 — Chaining pass (style/tone/heading standardization)
 
-*Not yet started.*
+### Stage 4 — Documentation Consistency Pass
 
-- [ ] Chaining prompt across all three documents
-- [ ] Before/after notes
+**Purpose:** Review `docs/getting-started.md`, `docs/api-reference.md`, and
+`docs/troubleshooting.md` as a single documentation set and improve
+terminology, heading, cross-reference, and formatting consistency across
+all three — an editorial pass only, not a content or behaviour change —
+per the chaining stage described in `DOCUMENTATION_PLAN.md` Section 2.4.
+
+**Prompt used:**
+
+> We are now beginning Stage 4: Documentation Consistency Pass. Read
+> PROJECT_SPECIFICATION.md, DOCUMENTATION_PLAN.md, PROMPT_HISTORY.md,
+> docs/getting-started.md, docs/api-reference.md, and
+> docs/troubleshooting.md. PROJECT_SPECIFICATION.md remains the frozen
+> source of truth — do not modify it. The purpose of this stage is not to
+> add new functionality or documentation, but to review the documentation
+> as a complete set and improve its consistency, readability, and
+> maintainability while preserving technical accuracy. Perform a full
+> cross-document review checking: identical terminology across documents
+> (Task, Status, Pending, Completed, Authentication, Bearer Token, etc.);
+> consistent H1/H2/H3 heading hierarchy; accurate cross-references between
+> all three documents; consistently described validation rules with
+> duplicated wording removed; identical authentication wording across all
+> three documents with no implied token expiration, refresh, logout, or
+> revocation; consistent explanation that changing status is part of
+> updating a task, not a separate mark-complete endpoint; consistent
+> Markdown formatting (lists, tables, spacing, code blocks, JSON
+> indentation); plain English and professional tone with no repetition;
+> internal consistency of examples; and confirmation that no consistency
+> edit introduces behaviour not defined by PROJECT_SPECIFICATION.md. Make
+> only editorial improvements — no new features, no removed functionality,
+> no API behaviour changes, no edits to PROJECT_SPECIFICATION.md.
+
+**Consistency checks performed:** all 10 checks listed in the prompt above,
+applied across all three documents simultaneously (not document-by-document
+in isolation), plus a link-by-link verification that every cross-reference
+anchor resolves to an actual heading in its target document.
+
+**Improvements made:**
+
+1. **Status/completion ordering standardized.** The specification's own
+   canonical phrasing is "marked completed or pending" (Sections 5 and
+   6.6). `docs/getting-started.md`'s heading "Marking a Task as Pending or
+   Completed" used the reverse order; renamed to "Marking a Task as
+   Completed or Pending" to match the specification exactly. Updated the
+   two places in `docs/troubleshooting.md` that reference this heading
+   (link text and anchor) and its own problem description ("marking it
+   pending or completed" → "marking it completed or pending") to match.
+   The separate Pending/Completed bullet list in `docs/getting-started.md`
+   (which lists Pending first, describing lifecycle order — the state
+   every task starts in, followed by the state it can reach) was left
+   unchanged, since it describes a different thing (state order, not the
+   "mark as X" phrase) and reordering it would reduce clarity for no
+   consistency benefit.
+2. **Logout spelling standardized.** `docs/getting-started.md` used
+   "log-out option" (hyphenated); the specification (Sections 3.2, 8) and
+   `docs/api-reference.md` both use "logout" (one word, no hyphen).
+   Changed to "logout option" for consistency.
+3. **Status value terminology aligned.** `docs/troubleshooting.md`'s
+   "Can't Update a Task" resolution said status values must be used
+   "(lowercase)"; `docs/api-reference.md` and the specification (Section 7)
+   describe this as "case-sensitive." Changed the troubleshooting wording
+   to say status values are "case-sensitive," matching the term used
+   elsewhere, while keeping the same meaning.
+4. **Cross-reference formatting consistency.** `docs/getting-started.md`'s
+   closing line referenced "the troubleshooting guide" as plain text, the
+   only bare (non-linked) cross-reference in the entire documentation set.
+   Changed to a proper Markdown link,
+   `[Troubleshooting Guide](troubleshooting.md)`, matching the linked
+   cross-reference style used everywhere else in all three documents.
+5. **Status banners updated.** All three documents' top-of-file status
+   notes now additionally record that they were "reviewed for
+   cross-document consistency (Stage 4)," alongside their existing
+   per-document fact-check/refinement status.
+
+**Checks performed with no changes needed:**
+
+- Heading hierarchy (H1 → H2 → H3) was already consistent across all three
+  documents.
+- All other cross-reference anchors (registration, login, task CRUD
+  operations, Authentication) already resolved correctly to their target
+  headings.
+- Validation-rule wording differs in register/precision by audience (plain
+  English in `docs/getting-started.md`, precise technical wording in
+  `docs/api-reference.md`), which is intentional per
+  `DOCUMENTATION_PLAN.md` Section 1, not an inconsistency — the underlying
+  rules themselves (email format, password length, title/description
+  length, status values) already matched exactly across all three
+  documents and were not reworded further.
+- Authentication wording already consistently avoided implying token
+  expiration, refresh, logout, or revocation in all three documents — no
+  changes needed beyond the logout spelling fix above.
+- Markdown list, table, code-block, and JSON-indentation formatting was
+  already consistent within and across all three documents.
+- No internal contradictions were found between examples in
+  `docs/api-reference.md` and `docs/troubleshooting.md`, and no outdated
+  wording from earlier drafts (e.g., the old "List tasks"/"Retrieve a
+  task" headings from the Stage 2 first pass) remained anywhere.
+
+**Confirmation of no behavioural changes:** every change made in this pass
+was a rewording, renaming, re-linking, or reordering of existing, already
+fact-checked content. No field, endpoint, status code, validation rule, or
+authentication behaviour was added, removed, or altered. `PROJECT_SPECIFICATION.md`
+was not modified.
 
 ---
 

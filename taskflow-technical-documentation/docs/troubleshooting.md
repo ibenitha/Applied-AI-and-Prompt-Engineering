@@ -1,6 +1,7 @@
 # TaskFlow Troubleshooting Guide
 
-> **Status:** Fact-checked and refined (Stage 3 complete). See
+> **Status:** Fact-checked and refined (Stage 3 complete), and reviewed for
+> cross-document consistency (Stage 4). See
 > [../PROMPT_HISTORY.md](../PROMPT_HISTORY.md) for the prompts used to
 > produce and refine this guide.
 
@@ -160,7 +161,7 @@ characters or fewer.
 
 ### Can't Update a Task
 
-**Problem:** Updating a task — including marking it pending or completed —
+**Problem:** Updating a task — including marking it completed or pending —
 fails.
 
 **Likely cause:** One of the following:
@@ -174,10 +175,11 @@ fails.
 **Resolution:** Include at least one field to update. If updating the
 title, keep it within 1–200 characters and non-blank. If updating the
 description, keep it to 2,000 characters or fewer. If updating the status,
-use exactly `"pending"` or `"completed"` (lowercase).
+use exactly `"pending"` or `"completed"` — status values are
+case-sensitive.
 
 **Status code:** `400 Bad Request`
 
 **See also:** [Updating a Task](getting-started.md#updating-a-task),
-[Marking a Task as Pending or Completed](getting-started.md#marking-a-task-as-pending-or-completed) ·
+[Marking a Task as Completed or Pending](getting-started.md#marking-a-task-as-completed-or-pending) ·
 [Update a task](api-reference.md#update-a-task)

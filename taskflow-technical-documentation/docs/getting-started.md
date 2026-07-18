@@ -1,6 +1,7 @@
 # Getting Started with TaskFlow
 
-> **Status:** Fact-checked and refined (Stage 1 complete). See
+> **Status:** Fact-checked and refined (Stage 1 complete), and reviewed for
+> cross-document consistency (Stage 4). See
 > [../PROMPT_HISTORY.md](../PROMPT_HISTORY.md) for the prompts used to
 > produce and refine this guide.
 
@@ -42,7 +43,7 @@ your task list. If either one doesn't match, you won't be let in — double
 check for typos and try again.
 
 Once you're logged in, you stay logged in. TaskFlow does not currently
-provide a separate log-out option.
+provide a separate logout option.
 
 ## Managing Your Tasks
 
@@ -87,7 +88,7 @@ same rules from creating a task still apply: the title can't be left blank,
 and the title and description still have the length limits described
 above.
 
-### Marking a Task as Pending or Completed
+### Marking a Task as Completed or Pending
 
 Marking a task as completed or pending is simply an update to its status —
 there's no separate "complete task" action. Every task has one of two
@@ -121,4 +122,5 @@ Once deleted, the task no longer appears in your task list.
 - **Task status:** can only be "pending" or "completed" — there's no other
   state a task can be in.
 
-If something doesn't work as expected, see the troubleshooting guide.
+If something doesn't work as expected, see the
+[Troubleshooting Guide](troubleshooting.md).
